@@ -147,7 +147,6 @@ app.get('/tasks/:id', async (req, res) => {
 
 app.get('/users/:userId/tasks', async (req, res) => {
   const { userId } = req.params;
-
   try {
     const tasks = await prisma.task.findMany({
       where: {
@@ -170,10 +169,6 @@ app.get('/users/:userId/tasks', async (req, res) => {
 
 
 
-
-
-
-
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+app.listen(8000, () => {
+  console.log('Server is running on http://localhost:8000');
 });
