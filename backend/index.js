@@ -59,7 +59,14 @@ app.get('/users/:id', async (req, res) => {
 });
 
 // update a user
-
+app.get('/', async (req, res) => {
+  try {
+    res.status(200).joson({status: "server is connected success full"})
+  } catch(err) {
+    console.log(err.message);
+    res.status(400).json({"error": err.message});
+  }
+})
 app.put('/users/:id', async (req, res) => {
   const { id } = req.params;
   const { name, email } = req.body;
