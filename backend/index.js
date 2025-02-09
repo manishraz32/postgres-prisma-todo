@@ -1,19 +1,22 @@
-import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 
 const app = express();
 const prisma = new PrismaClient();
 
 app.use(express.json());
 
-
 // Example route to fetch all users
-
 
 app.use(express.json());
 
+// check connecton
+app.get("/", async (req, res) => {
+  return res.json({ message: "connected successfully" });
+});
+
 // POST route to create a new user
-app.post('/users', async (req, res) => {
+app.post("/users", async (req, res) => {
   const { name, email } = req.body;
 
   try {
@@ -26,13 +29,12 @@ app.post('/users', async (req, res) => {
   }
 });
 
-
 // get all users
-app.get('/users', async (req, res) => {
+app.get("/users", async (req, res) => {
   try {
     const users = await prisma.user.findMany({
-      include: {tasks: true},
-    })
+      include: { tasks: true },
+    });
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -40,7 +42,7 @@ app.get('/users', async (req, res) => {
 });
 
 // get single user
-app.get('/users/:id', async (req, res) => {
+app.get("/users/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -51,7 +53,7 @@ app.get('/users/:id', async (req, res) => {
     if (user) {
       res.json(user);
     } else {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ error: "User not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -82,10 +84,9 @@ app.put('/users/:id', async (req, res) => {
   }
 });
 
-
 // delete a user
 
-app.delete('/users/:id', async (req, res) => {
+app.delete("/users/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -98,12 +99,11 @@ app.delete('/users/:id', async (req, res) => {
   }
 });
 
-
 // Crud operation for Task
 
 // Create a task
 
-app.post('/tasks', async (req, res) => {
+app.post("/tasks", async (req, res) => {
   const { taskName, userId } = req.body;
 
   try {
@@ -118,7 +118,7 @@ app.post('/tasks', async (req, res) => {
 
 // get all tasks
 
-app.get('/tasks', async (req, res) => {
+app.get("/tasks", async (req, res) => {
   try {
     const tasks = await prisma.task.findMany({
       include: { user: true },
@@ -129,9 +129,8 @@ app.get('/tasks', async (req, res) => {
   }
 });
 
-
 // Read a single tasks
-app.get('/tasks/:id', async (req, res) => {
+app.get("/tasks/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -142,17 +141,16 @@ app.get('/tasks/:id', async (req, res) => {
     if (task) {
       res.json(task);
     } else {
-      res.status(404).json({ error: 'Task not found' });
+      res.status(404).json({ error: "Task not found" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
+// Read all taskes which is created by a specific
 
-// Read all taskes which is created by a specific 
-
-app.get('/users/:userId/tasks', async (req, res) => {
+app.get("/users/:userId/tasks", async (req, res) => {
   const { userId } = req.params;
   try {
     const tasks = await prisma.task.findMany({
@@ -164,18 +162,17 @@ app.get('/users/:userId/tasks', async (req, res) => {
     if (tasks.length > 0) {
       res.json(tasks);
     } else {
-      res.status(404).json({ error: 'No tasks found for this user' });
+      res.status(404).json({ error: "No tasks found for this user" });
     }
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching tasks: ' + error.message });
+    res
+      .status(500)
+      .json({
+        error: "An error occurred while fetching tasks: " + error.message,
+      });
   }
 });
 
-
-
-
-
-
-app.listen(8000, () => {
-  console.log('Server is running on http://localhost:8000');
+app.listen(3000, () => {
+  console.log("Server is running on http://localhost:3000");
 });
